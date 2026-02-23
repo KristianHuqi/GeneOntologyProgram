@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><title>Gene Ontology Analysis System</title></head>
+<body>
+
+    <h1 style="text-align: center;">Gene Ontology Analysis System</h1>
+
+    <table style="margin: 30px auto; border: none;">
+        <tr>
+            <td style="padding-right: 40px; vertical-align: top;"><br><br><br><br>
+                <h2>Load new datasets</h2>
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    OBO File: <input type="file" name="obo_file" accept=".obo" required><br><br>
+                    GAF File: <input type="file" name="gaf_file" accept=".gaf" required><br><br>
+                    <input type="submit" value="Upload and go to Tools menu">
+                </form>
+            </td>
+
+            <td style="vertical-align: top;">
+                <img src="{{ url_for('static', filename='DNAsito.jpg') }}" 
+                     alt="Doodle elica DNA colorata" 
+                     style="max-width: 300px; height: auto;">
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

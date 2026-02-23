@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Details {{ term.id }}</title>
+</head>
+<body>
+    <h1>{{ term.id }} - {{ term.name }}</h1>
+
+    <p><b>Definition:</b> {{ term.definition }}</p>
+    
+    <p><b>Synonyms:</b> {{ term.sinonimi }}</p>
+
+    {% if term.obsoleto %}
+        <p style="color: red;"><b>WARNING: OBSOLETE TERM</b></p>
+        <p><b>Replaced by:</b> {{ term.sostituto }}</p>
+    {% endif %}
+
+    <h3>Ancestors:</h3>
+    {% if term.antenati %}
+        <ul>
+            {% for ant in term.antenati %}
+                <li>{{ ant }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No ancestors found</p>
+    {% endif %}
+
+    <h3>Descendants:</h3>
+    {% if term.discendenti %}
+        <ul>
+            {% for desc in term.discendenti %}
+                <li>{{ desc }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No descendants found</p>
+    {% endif %}
+
+
+
+    <a href="/dashboard">Back to Tools menu</a>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>System Statistics</title>
+</head>
+<body>
+    <h1>Gene Ontology Graph Statistics</h1>
+
+    <h2>General Summary</h2>
+    <table border="1" cellspacing="0">
+        <tr>
+            <th>Metric</th>
+            <th>Value</th>
+        </tr>
+        {% for row in summary %}
+        <tr>
+            <td>{{ row.metric }}</td>
+            <td>{{ row.value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Top 10 Most Annotated Genes</h2>
+    <table border="1" cellspacing="0">
+        <tr>
+            <th>Gene ID</th>
+            <th>Gene Name</th>
+            <th>Number of Annotations</th>
+        </tr>
+        {% for row in top_genes %}
+        <tr>
+            <td>{{ row.gene_id }}</td>
+            <td>{{ row.gene_name }}</td>
+            <td>{{ row.n_annotations }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Top 10 Most Populated GO Terms</h2>
+    <table border="1" cellspacing="0">
+        <tr>
+            <th>GO ID</th>
+            <th>GO Name</th>
+            <th>Namespace</th>
+            <th>Number of Genes</th>
+        </tr>
+        {% for row in top_go %}
+        <tr>
+            <td>{{ row.GO_ID }}</td>
+            <td>{{ row.GO_name }}</td>
+            <td>{{ row.namespace }}</td>
+            <td>{{ row.n_genes }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="/dashboard"> Back to Tools menu</a>
+</body>
+</html>

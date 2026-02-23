@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gene Annotations: {{ gene }}</title>
+</head>
+<body>
+    <h1>Annotations for gene: {{ gene }}</h1>
+
+    <table border="1" cellspacing="0">
+        <tr>
+            <th>GO ID</th>
+            <th>GO Name</th>
+            <th>Namespace</th>
+            <th>Evidence Code</th>
+            <th>Aspect</th>
+        </tr>
+        {% for row in annotations %}
+        <tr>
+            <td>{{ row.GO_ID }}</td>
+            <td>{{ row.GO_name }}</td>
+            <td>{{ row.namespace }}</td>
+            <td>{{ row.evidence }}</td>
+            <td>{{ row.aspect }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">No annotations found for this gene.</td></tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="/dashboard">Back to Tools menu</a>
+</body>
+</html>

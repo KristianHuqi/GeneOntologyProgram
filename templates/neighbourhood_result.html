@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neighbourhood Result: {{ go_id }}</title>
+</head>
+<body>
+    <h1>Terms in the neighbourhood of {{ go_id }} (Depth: {{ depth }})</h1>
+
+    <table border="1" cellspacing="0">
+        <thead>
+            <tr>
+                <th>GO ID</th>
+                <th>Name</th>
+                <th>Namespace</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in neighbors %}
+            <tr>
+                <td>{{ row.go_id }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.namespace }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3">No terms found in the neighbourhood.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/dashboard">Back to Tools menu</a>
+</body>
+</html>

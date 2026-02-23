@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Dashboard Tools</title>
+</head>
+<body>
+
+    {% if not tool_name %}
+        <h1 style="text-align: center; font-size: 2.5em;">TOOLS MENU</h1>
+        <div style="display: flex; justify-content: center;">
+        <ul style="font-size: 1.75em; font-weight: bold; list-style-position: inside;max-width: 800px;">
+            <li><a href="/stats">Visualise general statistics</a></li>
+            <p style="font-size: 0.75em; font-weight: normal; margin-left: 30px;"> 
+            Here you can visualise: graph data, number of genes, number of annotations, top 10 more annotated genes, top 10 more populated GO terms.</p> 
+
+            <li><a href="/dashboard/term">Search by GO ID</a></li>
+            <p style="font-size: 0.75em; font-weight: normal; margin-left: 30px;"> 
+            Here you can visualise: definition, synonyms, if it is obsolete (or not) and who replaced it, ancestors and descendants.</p>
+
+            <li><a href="/dashboard/gene">Search by gene</a></li>
+            <p style="font-size: 0.75em; font-weight: normal; margin-left: 30px;"> 
+            Here you can visualise: annotations; for each annotation GO ID, GO name, namespace, evidence code and aspect. You will see a short overview of the annotations of that specific gene, then you can take the GO: ID and use the tool 'Search by GO ID'.</p>
+
+            <li><a href="/dashboard/similarity">Similarity</a></li>
+            <p style="font-size: 0.75em; font-weight: normal; margin-left: 30px;"> 
+            Cosine similarity: using genes it calculates the exact proportion of shared biological functions. It divides the number of shared GO annotations by the total distinct annotations of both genes. Instead using GO terms measures the exact overlap of ancestral lineages. It divides the shared ancestors by the total unique ancestors of both terms up to the root. </p>
+            <p style="font-size: 0.75em; font-weight: normal; margin-left: 30px;"> 
+            Jaccard similarity: using genes it evaluates the functional alignment (trajectory) between genes. It is less penalized by differences in annotation volume (magnitude), focusing on whether the genes operate within the same biological macro-area, instead using GO terms evaluates the topological trajectory within the ontology. It identifies if terms derive from the same primary lineage, largely ignoring differences in their absolute hierarchical depth. </p>
+
+            <li><a href="/dashboard/neighbourhood">Neighbourhood analysis</a></li>
+            <p style="font-size: 0.75em; font-weight: normal; margin-left: 30px;"> 
+            Explore the ontology graph: enter a GO term ID and a depth level to retrieve its surrounding network of related terms. </p>
+
+        </ul>
+        </div>
+        
+
+
+
+
+        <a href="/">Go back to Load new datasets</a>
+
+    {% elif tool_name == 'term' %}
+        <h2>Search GO Term</h2>
+        <form action="/search_term" method="POST">
+            <label>Enter GO ID (e.g., GO:0008150):</label>
+            <input type="text" name="go_id" required>
+            <input type="submit" value="Search Term">
+        </form>
+        
+
+
+<a href="/dashboard">Back to Tools menu</a>
+
+    {% elif tool_name == 'gene' %}
+        <h2>Search Gene</h2>
+        <form action="/search_gene" method="POST">
+            <label>Enter Gene Symbol (e.g., TP53):</label>
+            <input type="text" name="gene_symbol" required>
+            <input type="submit" value="Search Gene">
+        </form>
+        
+
+
+<a href="/dashboard">Back to Tools menu</a>
+
+    {% elif tool_name == 'similarity' %}
+        <h2>Similarity Calculation</h2>
+        <form action="/similarity" method="POST">
+            <label>Comparison Type:</label>
+            <select name="sim_type">
+                <option value="term">GO Terms</option>
+                <option value="gene">Genes</option>
+            </select><br><br>
+
+
+
+
+            <label>Similarity Metric:</label>
+            <select name="metric">
+                <option value="cosine">Cosine Similarity</option>
+                <option value="jaccard">Jaccard Similarity</option>
+            </select><br><br>
+
+
+
+
+            <label>ID 1/GENE 1:</label> <input type="text" name="id1" required><br><br>
+            <label>ID 2/GENE 2:</label> <input type="text" name="id2" required><br><br>
+
+
+
+
+            <input type="submit" value="Calculate Similarity"><br><br>
+        </form>
+        
+
+
+<a href="/dashboard">Back to Tools menu</a>
+
+    {% elif tool_name == 'neighbourhood' %}
+        <h2>Neighbourhood Analysis</h2>
+        <form action="/neighbourhood" method="POST">
+            <label>Enter GO ID (e.g., GO:0008150):</label>
+            <input type="text" name="go_id" required><br><br>
+
+
+
+
+            <label>Depth:</label>
+            <input type="number" name="depth" value="1" min="1" max="5" required><br><br>
+
+
+
+
+            <input type="submit" value="Extract Neighbourhood"><br><br>
+        </form>
+        
+
+
+<a href="/dashboard">Back to Tools menu</a>
+
+    {% endif %}
+
+</body>
+</html>
