@@ -3,22 +3,18 @@ import pandas as pd
 from data_loader import GAF_parser, OBO_parser
 from ufficialegraph import GOGraph, _normalise_gaf, _normalise_terms
 from analytics import AnalyticsService, CosineSimilarity, JaccardSimilarity
-import os
+
 app = Flask(__name__)
 
-# Stato globale vuoto all'avvio
+
 app_state = {'graph': None, 'analytics_engine': None}
-'''
-@app.route('/')
-def index():
-    return render_template('index.html')
-'''
+
 @app.route('/')
 def index():
     # Controlla se il grafo esiste nello stato globale
     is_loaded = app_state['graph'] is not None
     return render_template('index.html', is_loaded=is_loaded)
-#------------------------------------------
+
 @app.route('/upload', methods=['POST'])
 def upload():
     obo = request.files.get('obo_file')
@@ -47,57 +43,48 @@ def upload():
         return f"Errore durante l'elaborazione: {e}", 500
 
     return redirect('/dashboard')
-#----------------------------------------------------
-# Rotta dinamica: accetta sia /dashboard che /dashboard/nome_strumento
+
 @app.route('/dashboard')
 @app.route('/dashboard/<tool_name>')
 def dashboard(tool_name=None):
     if app_state['graph'] is None: 
         return redirect('/')
-    # Passa la variabile 'tool_name' all'HTML
     return render_template('dashboard.html', tool_name=tool_name)
-#--------------------------------------
+
 @app.route('/search_term', methods=['POST'])
 def search_term():
     go_id = request.form.get('go_id', '').strip()
     graph = app_state['graph']
     
-    # Recupera i dati grezzi dal parser
     term_raw = graph.query_go_term_detail(go_id, verbose=False)
     
-    # 1. RISOLUZIONE CRASH: Interrompi se il termine non esiste
     if not term_raw:
         return f"Termine {go_id} non trovato nel dataset.", 404
     
     t = {}
-    # Usa .get() per prevenire ulteriori potenziali KeyError
     t['id'] = term_raw.get('go_id', go_id)
     t['name'] = term_raw.get('name', 'N/A')
     t['definition'] = term_raw.get('definition', 'N/A')
     t['obsoleto'] = term_raw.get('is_obsolete', False)
 
-    # Gestione SINONIMI
     lista_sin = term_raw.get('synonyms', [])
     if lista_sin:
         t['sinonimi'] = ", ".join(lista_sin)
     else:
         t['sinonimi'] = "Nessun sinonimo trovato"
 
-    # 2. RISOLUZIONE BUG VISIVO: Esegui il join della lista sostituti
     lista_sost = term_raw.get('replaced_by', [])
     if lista_sost:
         t['sostituto'] = ", ".join(lista_sost)
     else:
         t['sostituto'] = "Nessun sostituto disponibile"
 
-    # Gestione ANTENATI
     anc_df = graph.query_go_ancestors(go_id)
     if not anc_df.empty:
         t['antenati'] = (anc_df['go_id'] + " - " + anc_df['name']).tolist()
     else:
         t['antenati'] = []
 
-    # Gestione DISCENDENTI
     desc_df = graph.query_go_descendants(go_id)
     if not desc_df.empty:
         t['discendenti'] = (desc_df['go_id'] + " - " + desc_df['name']).tolist()
@@ -165,7 +152,6 @@ def similarity():
                            score=score,
                            metric_name=metric_name)
 
-#------------------------------NUOVO STATS
 @app.route('/stats', methods=['GET'])
 def stats():
     if app_state['graph'] is None or app_state['analytics_engine'] is None: 
@@ -183,7 +169,6 @@ def stats():
                            top_genes=top_genes_df.to_dict('records'),
                            top_go=top_go_df.to_dict('records'))
 
-#-----------------------------------------------------neighbourhood
 @app.route('/neighbourhood', methods=['POST'])
 def neighbourhood():
     if app_state['analytics_engine'] is None: return "Errore: Nessun dato caricato. Fai l'upload dei file OBO e GAF dalla Home.", 400
@@ -201,7 +186,6 @@ def neighbourhood():
                            go_id=go_id, 
                            depth=depth,
                            neighbors=neigh_df.to_dict('records'))
-#-----------------------------------------------------
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)
