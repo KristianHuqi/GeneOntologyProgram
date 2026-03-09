@@ -342,14 +342,3 @@ if __name__ == '__main__':
 
     print('\n── Top 10 most populated GO terms ──')
     print(graph.top_annotated_go_terms().to_string(index=False))
-    
-'''
-#TEST FINALE DELLE DUE  MATRICI INCAPSULATE
-    print('\n── Matrice di Adiacenza GO ──')
-    A, terms_A = graph.go_adjacency_matrix()
-    print(f"Forma della matrice: {A.shape}")
-
-    print('\n── Matrice Gene-GO ──')
-    M, genes_M, terms_M = graph.gene_go_matrix()
-    print(f"Forma della matrice: {M.shape}")
-'''
